@@ -17,12 +17,12 @@ Transformer vos idées les plus audacieuses en réalité numérique, en fourniss
 
 ```
 ┌─────────────────────────────────────────┐
-│  🌟 Design Ultra-Moderne & Responsif    │
-│  🎨 Interface Intuitive & Fluide         │
-│  ⚡ Performance Optimale                 │
-│  🔐 Code Sécurisé & Maintenable        │
-│  📱 Compatible Tous Appareils           │
-│  🎭 Animations Subtiles & Élégantes     │
+│  🌟 Design Ultra-Moderne & Responsif            │
+│  🎨 Interface Intuitive & Fluide                │
+│  ⚡ Performance Optimale                        │
+│  🔐 Code Sécurisé & Maintenable                 │
+│  📱 Compatible Tous Appareils                   │
+│  🎭 Animations Subtiles & Élégantes             │
 └─────────────────────────────────────────┘
 ```
 
