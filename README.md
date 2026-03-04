@@ -145,6 +145,3 @@ Ce projet est privé et protégé. Tous droits réservés © 2026 NEXUS Labs
 **[📱 Visitez le site](c:\Users\Pc\Desktop\NEXUS\index.html)** | **[📧 Contactez-nous](mailto:developpeurgithub@gmail.com)**
 
 </div>
-
-# NEXUS
-# NEXUS
