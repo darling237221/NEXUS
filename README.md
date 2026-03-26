@@ -26,12 +26,25 @@ Transformer vos idées les plus audacieuses en réalité numérique, en fourniss
 
 ## <img src="https://img.icons8.com/fluency/48/star.png" width="28"/> Caractéristiques Principales
 
+<<<<<<< HEAD
 - <img src="https://img.icons8.com/fluency/48/design.png" width="24"/> **Design Ultra-Moderne & Responsif** : Une expérience visuelle premium sur tous les écrans.
 - <img src="https://img.icons8.com/fluency/48/color-palette.png" width="24"/> **Interface Intuitive & Fluide** : Navigation pensée pour l'utilisateur.
 - <img src="https://img.icons8.com/fluency/48/lightning-bolt.png" width="24"/> **Performance Optimale** : Chargement rapide et exécution sans faille.
 - <img src="https://img.icons8.com/fluency/48/lock.png" width="24"/> **Code Sécurisé & Maintenable** : Architecture robuste suivant les meilleures pratiques.
 - <img src="https://img.icons8.com/fluency/48/multiple-devices.png" width="24"/> **Compatible Tous Appareils** : Fonctionne parfaitement de l'ordinateur de bureau au smartphone.
 - <img src="https://img.icons8.com/fluency/48/clapperboard.png" width="24"/> **Animations Subtiles & Élégantes** : Des transitions qui donnent vie à votre projet.
+=======
+```
+┌─────────────────────────────────────────┐
+│  🌟 Design Ultra-Moderne & Responsif            │
+│  🎨 Interface Intuitive & Fluide                │
+│  ⚡ Performance Optimale                        │
+│  🔐 Code Sécurisé & Maintenable                 │
+│  📱 Compatible Tous Appareils                   │
+│  🎭 Animations Subtiles & Élégantes             │
+└─────────────────────────────────────────┘
+```
+>>>>>>> 4d0eaa2b5c50154193060e73213165b373671268
 
 ---
 
