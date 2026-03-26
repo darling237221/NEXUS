@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #00ff88;
+            --secondary: #00d4ff;
+            --accent: #ff006b;
+            --bg-deep: #0a0a0f;
+            --bg-card: rgba(20, 20, 31, 0.7);
+            --text-main: #e0e0e0;
+            --text-dim: #8a8a9f;
+            --font-main: 'Inter', sans-serif;
+            --font-display: 'Orbitron', sans-serif;
+            --glass-border: rgba(0, 255, 136, 0.2);
+            --gradient-glow: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Ambient Glow Background */
+        .ambient-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.1) 0%, rgba(10, 10, 15, 1) 60%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Login Container */
+        #loginContainer {
+            width: 100%; max-width: 400px;
+            padding: 3rem 2.5rem;
+            background: rgba(15, 15, 23, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 255, 136, 0.05);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header h1 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            background: var(--gradient-glow);
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+        .login-header p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: left;
+        }
+        .input-group label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: var(--secondary);
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .input-group input {
+            padding: 1rem 1.2rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-family: var(--font-main);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .input-group input:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .btn-primary {
+            padding: 1rem;
+            background: var(--gradient-glow);
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-deep);
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+        }
+
+        /* Dashboard Container */
+        #dashboardContainer {
+            display: none;
+            width: 100%; height: 100vh;
+            background: var(--bg-deep);
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .admin-nav {
+            height: 70px;
+            padding: 0 2rem;
+            background: rgba(15, 15, 23, 0.9);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-nav .brand {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+            display: flex; align-items: center; gap: 0.8rem;
+        }
+        .admin-nav .user-actions {
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+        .return-site-btn, .logout-btn {
+            background: none; border: none; font-family: var(--font-main);
+            font-size: 0.9rem; cursor: pointer; transition: color 0.3s;
+            display: flex; align-items: center; gap: 0.5rem; outline: none; text-decoration: none;
+        }
+        .return-site-btn {
+            color: var(--text-dim); border: 1px solid var(--text-dim); padding: 0.5rem 1rem; border-radius: 8px;
+        }
+        .return-site-btn:hover {
+            color: #fff; border-color: #fff; background: rgba(255,255,255,0.1);
+        }
+        .logout-btn {
+            color: var(--accent);
+            border: 1px solid rgba(255, 0, 107, 0.3); padding: 0.5rem 1rem; border-radius: 8px;
+            background: rgba(255, 0, 107, 0.1);
+        }
+        .logout-btn:hover {
+            background: rgba(255, 0, 107, 0.2);
+            box-shadow: 0 0 15px rgba(255, 0, 107, 0.3);
+        }
+
+        /* Main app layout */
+        .dashboard-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar (Client List) */
+        .sidebar {
+            width: 350px;
+            background: rgba(15, 15, 23, 0.5);
+            border-right: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            font-weight: 600; color: var(--text-main);
+        }
+        #clientsList {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .client-item {
+            padding: 1.2rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .client-item:hover {
+            background: rgba(0, 255, 136, 0.05);
+        }
+        .client-item.active {
+            background: rgba(0, 255, 136, 0.1);
+            border-left: 4px solid var(--primary);
+        }
+        .client-name { font-weight: 600; color: #fff; font-size: 1rem; margin-bottom: 0.3rem; }
+        .client-phone { font-size: 0.8rem; color: var(--secondary); margin-bottom: 0.5rem; }
+        .client-preview { font-size: 0.85rem; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .client-time { position: absolute; top: 1.2rem; right: 1.5rem; font-size: 0.7rem; color: #6a6a7f; }
+
+        /* Chat Area */
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(10, 10, 15, 0.6);
+        }
+        #emptyChatState {
+            flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: var(--text-dim); gap: 1rem;
+        }
+        #emptyChatState i { font-size: 4rem; color: rgba(0, 212, 255, 0.2); }
+
+        #activeChat {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 1.5rem 2rem;
+            background: rgba(20, 20, 31, 0.8);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex; flex-direction: column;
+        }
+        .chat-header-name { font-size: 1.2rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
+        .chat-header-phone { font-size: 0.9rem; color: var(--text-dim); margin-top: 0.2rem; }
+
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .msg-wrapper { display: flex; flex-direction: column; }
+        .msg-client { align-items: flex-start; }
+        .msg-admin { align-items: flex-end; }
+        
+        .msg-bubble {
+            max-width: 70%;
+            padding: 1rem 1.2rem;
+            border-radius: 16px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .msg-client .msg-bubble {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-bottom-left-radius: 4px;
+        }
+        .msg-admin .msg-bubble {
+            background: var(--gradient-glow);
+            color: var(--bg-deep);
+            font-weight: 500;
+            border-bottom-right-radius: 4px;
+        }
+        .msg-time { font-size: 0.75rem; color: #6a6a7f; margin-top: 0.4rem; }
+
+        .chat-input-area {
+            padding: 1.5rem 2rem;
+            background: rgba(15, 15, 23, 0.9);
+            border-top: 1px solid var(--glass-border);
+            display: flex; gap: 1rem; align-items: flex-end;
+        }
+        .chat-input-area textarea {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            color: #fff;
+            font-family: var(--font-main);
+            font-size: 1rem;
+            resize: none;
+            height: 60px;
+            max-height: 150px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .chat-input-area textarea:focus {
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.1);
+        }
+        .send-btn {
+            width: 60px; height: 60px;
+            border-radius: 12px; background: var(--gradient-glow); border: none;
+            color: var(--bg-deep); font-size: 1.5rem; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 212, 255, 0.3);
+        }
+        .send-btn:hover { transform: scale(1.05); box-shadow: 0 5px 30px rgba(0, 212, 255, 0.5); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-body { flex-direction: column; }
+            .sidebar { width: 100%; height: 40vh; border-right: none; border-bottom: 1px solid var(--glass-border); }
+            .chat-area { height: 60vh; }
+            #loginContainer { margin: 1rem; padding: 2rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow"></div>
+
+    <!-- LOGIN SCREEN -->
+    <div id="loginContainer">
+        <div class="login-header">
+            <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--secondary); margin-bottom: 1rem;"></i>
+            <h1>NEXUS ADMIN</h1>
+            <p>Authentification Sécurisée</p>
+        </div>
+
+        <div class="input-group">
+            <label><i class="fas fa-id-card"></i> Identifiant Admin</label>
+            <input type="password" id="adminId" placeholder="ID Admin sécurisé">
+        </div>
+        
+        <div class="input-group">
+            <label><i class="fas fa-key"></i> Mot de passe</label>
+            <input type="password" id="adminPassword" placeholder="Mot de passe">
+        </div>
+
+        <button id="loginBtn" class="btn-primary">
+            <i class="fas fa-unlock-alt"></i> Accéder au Dashboard
+        </button>
+        <a href="index.html" class="return-site-btn" style="justify-content: center; margin-top: 0.5rem; border:none; color: var(--text-dim); text-decoration: underline;">
+            Retourner au site principal
+        </a>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="dashboardContainer">
+        <nav class="admin-nav">
+            <div class="brand">
+                <i class="fas fa-network-wired"></i> NEXUS Dashboard
+            </div>
+            <div class="user-actions">
+                <a href="index.html" class="return-site-btn">
+                    <i class="fas fa-globe"></i> Site Public
+                </a>
+                <button id="logoutBtn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </button>
+            </div>
+        </nav>
+
+        <div class="dashboard-body">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <i class="fas fa-users" style="color: var(--secondary); margin-right: 0.5rem;"></i> Clients Actifs
+                </div>
+                <div id="clientsList">
+                    <!-- Loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area">
+                <div id="emptyChatState">
+                    <i class="fas fa-comment-slash"></i>
+                    <h2>Aucune conversation sélectionnée</h2>
+                    <p>Sélectionnez un client dans la liste pour commencer à répondre.</p>
+                </div>
+
+                <div id="activeChat">
+                    <div class="chat-header">
+                        <div class="chat-header-name" id="currentClientName"><i class="fas fa-user-circle"></i> Sélectionner un client</div>
+                        <div class="chat-header-phone" id="currentClientPhone"></div>
+                    </div>
+                    
+                    <div class="messages-container" id="messagesContainer">
+                        <!-- Loaded dynamically -->
+                    </div>
+
+                    <div class="chat-input-area">
+                        <textarea id="replyInput" placeholder="Écrivez votre réponse..." rows="1"></textarea>
+                        <button id="sendReplyBtn" class="send-btn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ADMIN CREDENTIALS
+        const ADMIN_CREDENTIALS = {
+            id: 'nexus_admin_2024_ultra_secure_key_001',
+            password: 'SecurePass@2026#Nexus!'
+        };
+
+        const loginContainer = document.getElementById('loginContainer');
+        const dashboardContainer = document.getElementById('dashboardContainer');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const adminIdInput = document.getElementById('adminId');
+        const adminPasswordInput = document.getElementById('adminPassword');
+        
+        const clientsListEl = document.getElementById('clientsList');
+        const emptyChatState = document.getElementById('emptyChatState');
+        const activeChat = document.getElementById('activeChat');
+        const messagesContainer = document.getElementById('messagesContainer');
+        const currentClientNameEl = document.getElementById('currentClientName');
+        const currentClientPhoneEl = document.getElementById('currentClientPhone');
+        
+        const replyInput = document.getElementById('replyInput');
+        const sendReplyBtn = document.getElementById('sendReplyBtn');
+
+        let currentActivePhone = null;
+
+        // CHECK SESSION
+        if (sessionStorage.getItem('nexus_admin_logged') === 'true') {
+            showDashboard();
+        }
+
+        // LOGIN
+        loginBtn.addEventListener('click', () => {
+            const id = adminIdInput.value.trim();
+            const pwd = adminPasswordInput.value.trim();
+            if (id === ADMIN_CREDENTIALS.id && pwd === ADMIN_CREDENTIALS.password) {
+                sessionStorage.setItem('nexus_admin_logged', 'true');
+                showDashboard();
+            } else {
+                alert('Identifiants incorrects.');
+            }
+        });
+
+        // LOGOUT
+        logoutBtn.addEventListener('click', () => {
+            sessionStorage.removeItem('nexus_admin_logged');
+            location.reload();
+        });
+
+        function showDashboard() {
+            loginContainer.style.display = 'none';
+            dashboardContainer.style.display = 'flex';
+            loadClients();
+        }
+
+        function loadClients() {
+            clientsListEl.innerHTML = '';
+            const clients = [];
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                if (key && key.startsWith('nexus_chat_messages_')) {
+                    const phone = key.replace('nexus_chat_messages_', '');
+                    try {
+                        const messagesData = JSON.parse(localStorage.getItem(key)) || [];
+                        if (messagesData.length > 0) {
+                            clients.push({
+                                phone,
+                                name: messagesData.find(m => m.senderName)?.senderName || messagesData[0].senderName || 'Client',
+                                messages: messagesData,
+                                lastMessage: messagesData[messagesData.length - 1]
+                            });
+                        }
+                    } catch (e) {}
+                }
+            }
+
+            if (clients.length === 0) {
+                clientsListEl.innerHTML = '<div style="padding: 2rem; text-align: center; color: var(--text-dim);"><i class="fas fa-inbox text-3xl mb-2"></i><br>Aucun message</div>';
+                return;
+            }
+
+            // Sort by latest message
+            clients.sort((a, b) => new Date(b.lastMessage.timestamp) - new Date(a.lastMessage.timestamp));
+
+            clients.forEach(client => {
+                const row = document.createElement('div');
+                row.className = `client-item ${client.phone === currentActivePhone ? 'active' : ''}`;
+                
+                const timeStr = client.lastMessage.timestamp ? new Date(client.lastMessage.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                
+                row.innerHTML = `
+                    <div class="client-name">${escapeHtml(client.name)}</div>
+                    <div class="client-phone">${escapeHtml(client.phone)}</div>
+                    <div class="client-preview">${escapeHtml(client.lastMessage.text)}</div>
+                    <div class="client-time">${timeStr}</div>
+                `;
+                row.addEventListener('click', () => {
+                    document.querySelectorAll('.client-item').forEach(el => el.classList.remove('active'));
+                    row.classList.add('active');
+                    openChat(client);
+                });
+                clientsListEl.appendChild(row);
+            });
+        }
+
+        function openChat(client) {
+            currentActivePhone = client.phone;
+            emptyChatState.style.display = 'none';
+            activeChat.style.display = 'flex';
+            
+            currentClientNameEl.innerHTML = `<i class="fas fa-user-circle"></i> ${escapeHtml(client.name)}`;
+            currentClientPhoneEl.textContent = client.phone;
+            
+            renderMessages();
+        }
+
+        function renderMessages() {
+            messagesContainer.innerHTML = '';
+            if (!currentActivePhone) return;
+            
+            const key = 'nexus_chat_messages_' + currentActivePhone;
+            const messages = JSON.parse(localStorage.getItem(key)) || [];
+            
+            messages.forEach(msg => {
+                const wrapper = document.createElement('div');
+                wrapper.className = `msg-wrapper ${msg.sender === 'client' ? 'msg-client' : 'msg-admin'}`;
+                
+                const timeStr = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                
+                wrapper.innerHTML = `
+                    <div class="msg-bubble">${escapeHtml(msg.text)}</div>
+                    <div class="msg-time">${msg.sender === 'client' ? 'Client' : 'Vous'} • ${timeStr}</div>
+                `;
+                messagesContainer.appendChild(wrapper);
+            });
+            
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // SEND REPLY
+        sendReplyBtn.addEventListener('click', sendReply);
+        replyInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendReply(); }
+        });
+
+        function sendReply() {
+            const text = replyInput.value.trim();
+            if (!text || !currentActivePhone) return;
+            
+            const key = 'nexus_chat_messages_' + currentActivePhone;
+            const messages = JSON.parse(localStorage.getItem(key)) || [];
+            
+            messages.push({
+                sender: 'admin',
+                text: text,
+                timestamp: new Date().toISOString()
+            });
+            
+            localStorage.setItem(key, JSON.stringify(messages));
+            replyInput.value = '';
+            
+            renderMessages();
+            loadClients(); // Refresh list to update previews and layout
+        }
+
+        // Listen for storage events (if client sends a message in another tab)
+        window.addEventListener('storage', (e) => {
+            if (e.key && e.key.startsWith('nexus_chat_messages_')) {
+                loadClients();
+                if (currentActivePhone && e.key === 'nexus_chat_messages_' + currentActivePhone) {
+                    renderMessages();
+                }
+            }
+        });
+
+        function escapeHtml(str = '') {
+            return String(str).replace(/[&<>"'`=\/]/g, function (s) {
+                return ({
+                    '&': '&amp;', '<': '&lt;', '>': '&gt;',
+                    '"': '&quot;', "'": '&#39;', '/': '&#47;',
+                    '`': '&#96;', '=': '&#61;'
+                })[s];
+            });
+        }
+    </script>
+</body>
+</html>
